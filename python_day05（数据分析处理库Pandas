@@ -1,0 +1,287 @@
+Pandas概述：
+
+ 　　Python Data Analysis Library 或 pandas 是基于NumPy 的一种工具，该工具是为了解决数据分析任务而创建的。Pandas 纳入了大量库和一些标准的数据模型，提供了高效地操作大型数据集所需的工具。pandas提供了大量能使我们快速便捷地处理数据的函数和方法。
+
+　　关于数据处理的一个库，只有把数据处理成合适的样子才有利于以后的建模。
+
+Pandas库的安装：
+
+　　在anaconda中已经安装了这个库，不用自己安装。
+
+　　如何查看anaconda中安装的库呢？
+
+　  打开 anaconda prompt，输入conda list后回车即可。
+
+如果真的需要安装，则直接输入：pip install (tensorflow)即可
+
+Pandas的基本操作：
+
+　　1.读取.csv格式的数据文件
+
+　　在处理数据之前，先将数据读进来，pandas中提供了读取.csv文件的函数：.read_csv()
+
+　　 本操作处理的文件，文件名为：food_info.csv
+
+　　 当代码和数据在同一目录时，函数.read_csv("food_info.csv")的参数可直接输入文件名，
+
+     当代码与数据不在同一文件夹中，则应在函数.read_csv("D:\softwares\food_info.csv")的参数中输入数据的绝对路径.
+
+　　 与NumPy中的核心结构ndarray类似，在Pandas中也有其核心结构为：DataFrame
+
+　　DataFrame结构中的dtype类型
+object————for string values
+int————for integer values
+float————for float values
+datetime————for time values
+bool————for Boolean values
+可以用以下代码查看：
+
+print(food_info.dtypes)              #打印文件中数据的类型。object类型即string类型
+ 
+/*************************************************************************************************/
+ 
+
+1 import pandas
+2 food_info = pandas.read_csv("food_info.csv")   #读取数据文件，   并将数据赋值成一个变量
+3 print(type(food_info))               #将数据赋值成一个变量后，打印此变量的类型为Dataframe
+4 print(food_info.dtypes)              #打印文件中数据的类型。object类型即string类型
+5 print(help(pandas.read_csv))         #若对pandas中的某函数不了解，可以通过help()来查看
+/*************************************************************************************************/
+ 
+
+
+　　    2. DataFrame类型的变量拥有的操作
+
+ 　　  在第一步中，将要处理的数据文件读取出来并赋值给一个变量food_info，此变量的类型为DataFrame类型，下边将会对这个变量进行操作。
+
+ 　　2.1  .head()函数，显示读取出来的头几行数据
+
+无参数
+
+　　.head()函数如果不加参数，则默认显示数据的前五行。
+
+food_info.head()    #head()没有给定参数，默认显示前5行
+运行结果：
+
+
+
+有参数
+
+　　  .head(a)函数如果添加参数a，则显示数据的前a行。
+
+food_info.head(3)          #当head(a)指定参数a，则显示先a行
+运行结果：
+
+
+
+　　　 2.2  .tail()函数，显示读取出来的尾几行数据
+
+无参数
+
+　　.tail()函数如果不加参数，则默认显示数据的末尾五行。
+
+food_info.tail()          #tail()没有参数时，显示尾五行
+运行结果：
+
+
+
+有参数
+
+ 　　.tail(a)函数如果添加参数a，则显示数据的末尾a行。
+
+food_info.tail(3)             #tail(a) 有参数a时，显示尾a行
+运行结果：
+
+
+
+有print与没有print的区别
+
+　　　没有实质性的差别，只是显示的形式不同而已。
+
+print(food_info.tail(3))      #有print和没有print显示形式有些不同   
+运行结果：
+
+
+
+　　3、 .columns函数显示文件的列名
+food_info.columns                    #显示文件的列名
+#print(food_info.columns)            #与不带print一样
+运行结果：
+
+
+
+ 　　4. .shape函数，返回数据文件的规模（即行数和列数）
+food_info.shape         #返回数据文件的规模，即行数和列数（样本数与属性数）
+运行结果：
+
+
+
+　　 5. .loc[ ]函数，取数据文件中特定行位置的数据
+　　   在Pandas中取文件特定位置的数据不像python和numpy中那样直接通过index来调，通常会使用.loc[a]函数来调，参数a等于几就是取第a+1行的数据。（index是从0开始的）
+food_info.loc[0]        #返回第一行的文件数据
+#print(food_info.loc[0])
+运行结果：
+
+
+
+注意：
+
+ 　　当index的值超过了文件的样本个数，会报错。所以注意索引的大小。
+
+food_info.loc[8888]        #返回第8889行的文件数据
+运行结果：
+
+
+
+通常会使用.loc[a:b]函数来调，参数a:b 相当于取从第a行到第b行的数据。
+food_info.loc[3:6]         #返回数据文件的3——6行数据
+运行结果：
+
+
+
+ 
+
+   通常会使用.loc[[a,b,c]]函数来调，参数a,b,c 相当于去取第a，b,c三行的数据。
+food_info.loc[[3,5,7]]        #返回数据文件的3,5,7行数据
+
+
+ 　　6. 取数据文件中特定列位置的数据
+　　　想要一列一列的取数据，应该运用什么方法呢？
+　　数据的每一列都有一个列名，当对 .read_csv()不指定参数的时候，会默认数据的第一行是列名。则可以通过第一行的列名，来拿到这一列。
+
+复制代码
+ndb_col = food_info["NDB_No"]       #打印列名为“NDB_No”所在的那一列
+print(ndb_col)
+
+#也可以将列名“NDB_No”赋值给变量，然后通过变量来返回数据
+col_name = "NDB_No"
+ndb_col = food_info[col_name]
+print(ndb_col)
+/*************************************************************************************************/
+ 
+
+　　想要对特定几列取数据，应该运用什么方法呢？
+　　想要取特定的几列，则只需要将想要取得列的列名弄到一起，组成一个list就可以了
+
+columns = ["Zinc_(mg)","Copper_(mg)"]     #将要取得两列的列名放到一个list里，并赋给变量
+zinc_coop = food_info[columns]            #通过变量取得两列的数据
+zinc_coop                                 #显示
+#要不要print只是打印出来的形式不太相同
+#print(zinc_coop)                       
+
+#完全可以不依靠中间变量，意义相同
+#food_info[["Zinc_(mg)","Copper_(mg)"]]
+/*************************************************************************************************/
+ 
+
+
+ 　　7.抽取列名中以（g）为单位的列的数据
+　　在 .csv数据中，有的是以克（g）为单位，有些是以毫克（mg）为单位，现在的目标是：抽取出全部以（g）为单位的列的数据。
+
+数据的列表头基本情况展示如下：
+
+
+
+思路：先去列名，用.columns函数，然后将取得的列名存放成list格式。
+
+      再通过对list操作，来匹配出以 “（g）”结尾的列名，append到food_info中。
+
+import pandas
+
+#目的：想要看一下数据中有哪些列是以克（g）为单位的
+
+food_info = pandas.read_csv("food_info.csv")    #读取.csv的数据文件
+#print(food_info.columns)                       #返回DataFrame类型变量的列名
+#print(food_info.head(2))
+col_names = food_info.columns.tolist()          #返回DataFrame类型变量的列名，并将其存储为list格式显示。
+print("col_names = ", col_names) 
+print("-----------------------------------------------")
+
+gram_columns = []                               #定义list的变量，准备存放以（g）为单位的列名
+for c in col_names:                             #用for循环对为一个列名进行遍历
+    if c.endswith("(g)"):                       #如果列名是以“（g）”结尾的，则将其放入到gram_columns的列表中
+        gram_columns.append(c)
+print("gram_columns = ", gram_columns)
+print("------------------------------------------------")
+gram_df = food_info[gram_columns]               #gram_df 是所有以（gram_columns）为列名的列的数据。（即抽出这么几行）
+print(gram_df.head(3))                          #打印所有以“(g)”为单位的列名对应的数据的前三行
+/*************************************************************************************************/
+ 
+
+　　8.在Pandas中单列数据的“+”“-”“×”“÷”操作
+　　   需求：在 .csv的文件中，有的列的数据是以毫克（mg）为单位的，现在想将其转化成为以克（g）为单位的数据。
+
+    思路：用food_info["列名"]的方式调出某一列的数据，然后将其  / 1000，便把以毫克（mg）为单位的转化成了以克（g）为单位的了。嘻嘻
+
+print(food_info["Iron_(mg)"])                         #显示以mg为单位的，Iron_(mg)的数据
+div_1000 = food_info["Iron_(mg)"]/1000                #将其数据 ÷1000，换算为 g
+print(div_1000)                                       #打印换算后的数据。
+
+/*************************************************************************************************/
+ 
+        
+
+　　 9.在Pandas中多列数据之间的“+”“-”“×”“÷”操作
+　　　　在Pandas中，不但各列数据可以“+”“-”“×”“÷”任何数，两列或者多列数据之间也可以进行“+”“-”“×”“÷”。
+
+      要求维度一样，当维度一样的时候，对应位置的数据进行运算。
+
+　　  下边要介绍的是将数据中的两列数据进行乘法，然后把得到的结果作为数据的一个新的指标加入到原来的数据中，使原本数据的列数据增加一。
+
+import pandas
+
+#如若数据的维度相同，即行列数相同，则可将数据进行“+”“-”“×”“÷”操作。
+#并可将操作过后得到的列添加在原来数据中，成为一个新的指标，此时的数据的.shape的值将会多加了一列。
+
+food_info = pandas.read_csv("food_info.csv")                          #读取.csv的数据文件
+water_energy = food_info["Water_(g)"]*food_info["Energ_Kcal"]         #将数据中"Water_(g)"和"Energ_Kcal"这两列的数据做乘法运算，
+                                                                      #并将结果赋值给变量water_energy
+print("原数据的shape值：",food_info.shape) 
+
+food_info["Water_energy"] = water_energy                              #将乘法得到的新的数据作为样本的一个指标加入到food_info变量中，命名为："Water_energy"
+print("现在的shape值：", food_info.shape)
+
+columns = ["Water_(g)","Energ_Kcal","Water_energy"]                   #将三列数据组成一个list,然后赋值给变量columns
+water_energy_togher = food_info[columns]                              #将list作为food_info的参数，并显示
+water_energy_togher
+
+#当然了，以上的三行代码，可以合并为下边的一句，注意三个列名组成的是一个list,然后传到food_info[]中
+#print(food_info[["Water_(g)","Energ_Kcal","Water_energy"]])
+/*************************************************************************************************/
+ 
+
+
+　　 10.用.max()函数求某一列数据的最大值
+　　     要求：求某一列数据的最大值
+
+     思路：先定位到这一列，然后用.max()函数直接求出
+
+#求某一列数据的一个最大值
+#首先定位到某一列，然后使用.max()函数，求出最大值
+max_calories = food_info["Energ_Kcal"].max()
+print("max = ",max_calories)
+/*************************************************************************************************/
+ 
+
+　　 11.用sort_values()对Pandas中的数据进行排序
+对Pandas的列进行一个排序
+使用sort_values()函数对数据进行一个排序，
+参数：首先要给一个列名（即对此列数据进行排序）
+      inpalce = True,表示排序后生成一个新的DataFrame数据，而不是原来的那个。 = False表示原来的那个
+      而且sort_values()默认的排序方式就是从小到大排序，如果想要从大到小，则设置ascending = False
+      对于缺省值的样本，panda会返回NaN，并将这数据排在最后
+
+#对Pandas的列进行一个排序
+#使用sort_values()函数对数据进行一个排序，参数：首先要给一个列名（即对此列数据进行排序）
+#inpalce = True,表示排序后生成一个新的DataFrame数据，而不是原来的那个。 = False表示原来的那个
+#而且sort_values()默认的排序方式就是从小到大排序，如果想要从大到小，则设置ascending = False
+#对于缺省值的样本，panda会返回NaN，并将这数据排在最后
+
+
+food_info.sort_values("Sodium_(mg)",inplace = True)
+print(food_info["Sodium_(mg)"])
+
+food_info.sort_values("Sodium_(mg)",inplace = True, ascending = False)
+print(food_info["Sodium_(mg)"])
+/*************************************************************************************************/
+ 
