@@ -1,0 +1,54 @@
+python具有文件处理功能
+
+1、打开并显示文件内容后关闭
+
+f = open('D:\softwares\python_test.txt', 'r') #打开D盘位置下的python_test.txt文件，并将其标志为可读。（当其文件与python的编译器在同一目录下，则可直接写文件名，不需添加路径）
+                                              #要打开的此文件必须存在，否则会报错
+
+g = f.read()                                  #读取打开的文件
+print(g)                                      #显示打开的文件
+
+f.close()                                     #阅读显示完毕，将文件关闭
+/********************************************************************************************************/
+2、打开文件并对其进行写操作
+
+
+f = open('D:\softwares\python_test.txt', 'w')   #打开D盘下的python_test.txt文件（没有时会生成此文件），并显示可写操作
+
+#向文件中写入要输入的内容
+f.write('天行健，君子以自强不息')   
+f.write('\n')
+f.write('地势坤，君子以厚德载物')
+
+f.close()           #关闭文件
+/********************************************************************************************************/
+3、python处理 .csv的文件
+
+　　用excel输入如下内容，保存为 .csv的文件，保存在D:\softwares\weather.csv
+
+
+
+3.1、
+
+
+#代码实现目的：打开.csv文件，将其分割开，做每行的提取，放到list(列表)中
+
+weather_data = []    #准备要放数据的列表
+f = open('D:\softwares\weather.csv', 'r')
+data = f.read()
+rows = data.split('\n')          #将数据用"\n"分隔开
+for row in rows:
+    split_row = row.split(',')      #将每行分出来的数据再通过”，“分割
+    weather_data.append(split_row)      #将取到的每行数据添加到最初定义的列表中
+print(weather_data)
+
+
+
+
+3.2 只取.csv中的第二列信息
+
+weather = []
+for row in weather_data:
+    weather.append(row[1])
+print(weather)
+f.close()
