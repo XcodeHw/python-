@@ -1,0 +1,160 @@
+　　在可视化库Matplotlib(1)中学习了折线图和子图，那么现在开始学习柱状图（条形图），散点图
+
+1. 柱状图
+　　  柱状图的生成函数是bar()，bar()方法有两个必需的参数，分别是left和height。
+
+　　我们使用left来指定每个bar的高度的x坐标。我们使用height参数来指定每个条的高度。
+
+　　第三个参数表示每个柱子的宽度。
+
+1.1 生成柱状图需要的数据
+　　这里用到的数据是美国各个网站对电影的评分数据集。"fandango_score_comparison.csv"文件。像惯常一样，打开它，取数据，我们这里选取5家网站对第一部电影的评分数据来绘制柱状图。
+
+复制代码
+#关于电影评分的数据
+import pandas as pd
+reviews = pd.read_csv("fandango_score_comparison.csv")  
+#抽出几列数据拿出来玩一下下，包括电影名和五家评分网站
+cols = ["FILM","RT_user_norm","Metacritic_user_nom","IMDB_norm","Fandango_Ratingvalue","Fandango_Stars"] 
+norm_reviews = reviews[cols]    
+print(norm_reviews[:1])         #打印抽取数据的第一行来看看
+复制代码
+运行结果：
+
+
+
+最后一行不带print()会使数据更清楚
+
+
+
+1.2 就上边数据生成柱状图
+　　还是在前边说一下关于 fig, ax = plt.subplots()吧，这是很多实例中给出的做法，具体的理解可能就是：
+
+subplot()是一个函数，它返回包含图形和轴对象的元组。因此，当使用图ax = plt.sub()时，您将这个元组解压缩到变量图和ax中。
+
+因为返回的是元组，所以要用fig, ax这个变量来接收。
+复制代码
+import matplotlib.pyplot as plt
+from numpy import arange
+#bar()方法有两个必需的参数，分别是left和height。
+#我们使用left来指定每个bar的高度的x坐标。我们使用height参数来指定每个条的高度。
+num_cols = ["RT_user_norm","Metacritic_user_nom","IMDB_norm","Fandango_Ratingvalue","Fandango_Stars"]
+
+bar_heights = norm_reviews.ix[0,num_cols].values        #取各个评分网站对第一部电影的评分，作为bar()的第二个参数
+print(bar_heights)
+bar_positions = arange(5) + 1.00     #bar()的第一个参数
+print(arange(5))
+print(bar_positions)
+fig, ax = plt.subplots()     #subplot()是一个函数，它返回包含图形和轴对象的元组。因此，当使用图ax = plt.sub()时，您将这个元组解压缩到变量图和ax中。
+ax.bar(bar_positions, bar_heights,0.3)   #第三个参数0.3表示每个主子的宽度
+plt.show()
+复制代码
+运行结果：
+
+
+
+ 1.3 完整一些的上边的柱形图
+ 
+
+
+
+　　如上边所示，柱状图默认的x轴式（1，2，3，4，5），但是在电影评分的数据中我们知道，x轴应该是各大评分网站的名字的，我们可以通过设置来显示。
+
+　　在默认情况下，matplotlib将x轴的刻度标签设置为整数，在x轴上(从0到6)，我们只需要在横条的x轴上标上标记。
+
+我们可以使用Axes.set_xticks()来改变节拍的位置(1、2、3、4、5):
+
+复制代码
+import matplotlib.pyplot as plt
+from numpy import arange
+#bar()方法有两个必需的参数，分别是left和height。
+#我们使用left来指定每个bar的高度的x坐标。我们使用height参数来指定每个条的高度。
+num_cols = ["RT_user_norm","Metacritic_user_nom","IMDB_norm","Fandango_Ratingvalue","Fandango_Stars"]
+
+bar_heights = norm_reviews.ix[0,num_cols].values        #取各个评分网站对第一部电影的评分，作为bar()的第二个参数
+bar_positions = arange(5) + 1.00     #bar()的第一个参数
+tick_positions = range(1,6)          #将其设置为（1，6）是为了让其评分网站名字与数据对应上
+
+fig, ax = plt.subplots()     #subplot()是一个函数，它返回包含图形和轴对象的元组。因此，当使用图ax = plt.sub()时，您将这个元组解压缩到变量图和ax中。
+
+ax.bar(bar_positions, bar_heights,0.4)   #第三个参数0.3表示每个主子的宽度
+ax.set_xticks(tick_positions)
+ax.set_xticklabels(num_cols,rotation = 20) #将x轴改成评分网站的名字，并倾斜20度显示
+
+ax.set_xlabel('Rating Source')
+ax.set_ylabel('Average Rating')
+ax.set_title('Average User Rating For Avengers: Age of Ultron (2015)')
+plt.show()
+复制代码
+运行结果：
+
+
+
+1.4 横着显示柱状图
+　　一般情况下，柱状图都是竖着显示的，但是有时也可以横着显示，两个的代码基本相同，只是把bar()换成了barh()
+
+复制代码
+import matplotlib.pyplot as plt
+from numpy import arange
+
+num_cols = ["RT_user_norm","Metacritic_user_nom","IMDB_norm","Fandango_Ratingvalue","Fandango_Stars"]
+
+bar_widths = norm_reviews.ix[0,num_cols].values        #取各个评分网站对第一部电影的评分，作为bar()的第二个参数
+bar_positions = arange(5) + 1.00     #bar()的第一个参数
+tick_positions = range(1,6)          #将其设置为（1，6）是为了让其评分网站名字与数据对应上
+
+fig, ax = plt.subplots()     #subplot()是一个函数，它返回包含图形和轴对象的元组。因此，当使用图ax = plt.sub()时，您将这个元组解压缩到变量图和ax中。
+
+ax.barh(bar_positions, bar_heights,0.4)   #第三个参数0.3表示每个主子的宽度
+ax.set_yticks(tick_positions)
+ax.set_yticklabels(num_cols,rotation = 0) #将x轴改成评分网站的名字，并倾斜20度显示
+
+ax.set_ylabel('Rating Source')
+ax.set_xlabel('Average Rating')
+ax.set_title('Average User Rating For Avengers: Age of Ultron (2015)')
+plt.show()
+复制代码
+运行结果：
+
+ 
+
+2 散点图
+2.1 关于两个评分网站的散点图
+　　  设置散点图的函数为：.scatter( )，左参数为散点图的横坐标数据，右参数为散点图的纵坐标数据。并且表示x,y的这些数据必须是同纬度的。
+
+　　基于数据，我们使用两个评分网站“Fandango_Ratingvalue”和“RT_user_norm”的数据进行散点图的绘制。　
+
+复制代码
+fig, ax = plt.subplots()
+#画Fandango_Ratingvalue和RT_user_norm评分网站的散点图
+ax.scatter(norm_reviews['Fandango_Ratingvalue'], norm_reviews['RT_user_norm'])
+
+ax.set_xlabel('Fandango')
+ax.set_ylabel('Rotten Tomatoes')
+plt.show()
+复制代码
+运行结果：
+
+
+
+ 2.2 在2.1的基础上转换一下轴显示
+复制代码
+#Switching Axes
+fig = plt.figure(figsize=(10,5))       #指定画图区域
+ax1 = fig.add_subplot(1,2,1)           #定义两个子图
+ax2 = fig.add_subplot(1,2,2)
+
+ax1.scatter(norm_reviews['Fandango_Ratingvalue'], norm_reviews['RT_user_norm'])
+ax1.set_xlabel('Fandango')
+ax1.set_ylabel('Rotten Tomatoes')
+#ax1与ax2的区别就是转换了一下x与y轴，嗯，就是这样
+ax2.scatter(norm_reviews['RT_user_norm'], norm_reviews['Fandango_Ratingvalue'])
+ax2.set_xlabel('Rotten Tomatoes')
+ax2.set_ylabel('Fandango')
+plt.show()
+复制代码
+运行结果：
+
+
+
+ 
